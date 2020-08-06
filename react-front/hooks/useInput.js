@@ -5,7 +5,7 @@ export default initValue => {
 
 	const onChangeValue = useCallback(
 		e => {
-			e.preventDefault();
+			// e.preventDefault();
 			setValue(e.target.value);
 		},
 		[value, setValue],

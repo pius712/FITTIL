@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Row, Col } from 'antd';
 import Router from 'next/router';
-import AppHeader from './AppHeader';
+import AppHeader from './SignupHeader';
 import SignupForm from './SignupForm';
 
 const MainWrapper = styled.div`
@@ -33,7 +33,7 @@ const DescriptionContent = styled.div`
 
 const SigninLayout = () => {
 	const { descriptionTitle, descriptionContent } = useSelector(
-		state => state.post,
+		state => state.note,
 	);
 
 	return (

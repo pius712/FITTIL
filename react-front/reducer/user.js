@@ -8,10 +8,17 @@ import {
 	LOGOUT_USER_REQUEST,
 	LOGOUT_USER_SUCCESS,
 	LOGOUT_USER_FAILURE,
+	LOAD_MY_INFO_REQUEST,
+	LOAD_MY_INFO_SUCCESS,
+	LOAD_MY_INFO_FAILURE,
+	EDIT_PROFILE_REQUEST,
+	EDIT_PROFILE_SUCCESS,
+	EDIT_PROFILE_FAILURE,
 } from '../actions';
 import produce from 'immer';
 const initialState = {
 	me: null,
+	otherUserInfo: null,
 	registerLoading: false,
 	registerDone: false,
 	registerError: null,
@@ -21,14 +28,20 @@ const initialState = {
 	logoutLoading: false,
 	logoutDone: false,
 	logoutError: null,
+	loadMyInfoLoading: false,
+	loadMyInfoDone: false,
+	loadMyInfoError: null,
+	editProfileLoading: false,
+	editProfileDone: false,
+	editProfileError: null,
 };
 const dummyUser = data => ({
 	...data, // nickname, email, password
 	nickname: 'pius712', // 로그인 용
 	id: 1,
 	Posts: [],
-	StaringUser: [],
-	StareedUser: [],
+	Followings: [],
+	Followers: [],
 });
 const reducer = (state = initialState, action) => {
 	return produce(state, draftState => {
@@ -89,6 +102,35 @@ const reducer = (state = initialState, action) => {
 			case LOGOUT_USER_FAILURE:
 				draftState.logoutLoading = false;
 				draftState.logoutError = action.error;
+				break;
+			case LOAD_MY_INFO_REQUEST:
+				draftState.loadMyInfoLoading = true;
+				draftState.loadMyInfoDone = false;
+				draftState.loadMyInfoError = null;
+				break;
+			case LOAD_MY_INFO_SUCCESS:
+				draftState.loadMyInfoLoading = false;
+				draftState.loadMyInfoDone = true;
+				draftState.me = action.data;
+				break;
+			case LOAD_MY_INFO_FAILURE:
+				draftState.loadMyInfoLoading = false;
+				draftState.loadMyInfoError = action.error;
+				break;
+			case EDIT_PROFILE_REQUEST:
+				draftState.editProfileLoading = true;
+				draftState.editProfileDone = false;
+				draftState.editProfileError = null;
+				break;
+			case EDIT_PROFILE_SUCCESS:
+				draftState.editProfileLoading = false;
+				draftState.editProfileDone = true;
+				console.log(action.data);
+				draftState.me = action.data;
+				break;
+			case EDIT_PROFILE_FAILURE:
+				draftState.editProfileLoading = false;
+				draftState.editProfileError = action.error;
 				break;
 			default:
 				break;

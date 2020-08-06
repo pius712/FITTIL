@@ -13,6 +13,14 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
+    "/[username]": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/[username]/repository": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
     "/_app": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"

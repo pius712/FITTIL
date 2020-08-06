@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
-import AppHeader from '../component/layout/AppHeader';
+import AppHeader from '../component/layout/SignupHeader';
 import { Row, Col, Button } from 'antd';
 import useInput from '../hooks/useInput';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import { LOGIN_USER_REQUEST } from '../actions';
+import { LOGIN_USER_REQUEST, LOAD_MY_INFO_REQUEST } from '../actions';
 import Router from 'next/router';
+import wrapper from '../store/configureStore';
+import axios from 'axios';
+import { END } from 'redux-saga';
+
 const LoginWrapper = styled.main`
 	margin: 50px 0px;
 `;
@@ -51,11 +55,16 @@ const PasswordReset = styled.p`
 	right: 0;
 	top: 0;
 `;
+const WarningMessage = styled.p`
+	text-align: center;
+	color: red;
+	font-size: 12px;
+`;
 const Login = () => {
 	const dispatch = useDispatch();
 	const [id, onChangeId] = useInput('');
 	const [password, onChangePassword] = useInput('');
-	const { loginDone, me } = useSelector(state => state.user);
+	const { loginDone, loginError, me } = useSelector(state => state.user);
 	const handleSubmit = useCallback(
 		e => {
 			e.preventDefault();
@@ -71,9 +80,10 @@ const Login = () => {
 	);
 	useEffect(() => {
 		if (loginDone && me) {
-			Router.push('/main');
+			Router.push(`/${me.nickname}`);
 		}
 	});
+
 	return (
 		<>
 			<AppHeader></AppHeader>
@@ -114,6 +124,9 @@ const Login = () => {
 								>
 									Signin
 								</SigninButton>
+								{loginError ? (
+									<WarningMessage>{loginError}</WarningMessage>
+								) : null}
 							</form>
 						</LoginFormWrapper>
 						<CreateAccount>
@@ -129,3 +142,18 @@ const Login = () => {
 	);
 };
 export default Login;
+
+export const getServerSideProps = wrapper.getServerSideProps(
+	async ({ store, req }) => {
+		const cookie = req ? req.headers.cookie : '';
+		axios.defaults.headers.Cookie = '';
+		if (req && cookie) {
+			axios.defaults.headers.Cookie = req.headers.cookie;
+		}
+		store.dispatch({
+			type: LOAD_MY_INFO_REQUEST,
+		});
+		store.dispatch(END);
+		await store.sagaTask.toPromise();
+	},
+);
