@@ -12,7 +12,7 @@ module.exports = () => {
 					id,
 				},
 			});
-			return done(null, user.id);
+			return done(null, user);
 		} catch (err) {
 			return done(err);
 		}

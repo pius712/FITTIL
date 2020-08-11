@@ -7,10 +7,10 @@ import Link from 'next/link';
 import AppHeader from './AppHeader';
 import AppMenu from './AppMenu';
 import Profile from '../profile/Profile';
-const AppLayout = ({ content, right, targetname }) => {
+const AppLayout = ({ left, menu, content, right, targetname }) => {
 	return (
 		<>
-			<AppHeader></AppHeader>
+			<AppHeader targetname={targetname}></AppHeader>
 			<main>
 				<Row>
 					{/* 좌측 */}
@@ -20,16 +20,18 @@ const AppLayout = ({ content, right, targetname }) => {
 						md={{ span: 6, offset: 0 }}
 						xl={{ span: 5, offset: 2 }}
 					>
-						<Profile></Profile>
+						{left}
+						{/* <Profile targetname={targetname}></Profile> */}
 					</Col>
 					{/* 중간 */}
 					<Col
-						xs={{ span: 0, offset: 0 }}
-						sm={{ span: 0, offset: 0 }}
+						xs={{ span: 24, offset: 0 }}
+						sm={{ span: 24, offset: 0 }}
 						md={{ span: 14, offset: 0 }}
 						xl={{ span: 13, offset: 0 }}
 					>
-						<AppMenu targetname={targetname}></AppMenu>
+						{menu}
+						{/* <AppMenu targetname={targetname}></AppMenu> */}
 						{content}
 					</Col>
 					{/* 우측 */}

@@ -112,7 +112,7 @@ function* fetchNoteLength(action) {
 		console.error(err);
 		yield put({
 			type: FETCH_NOTE_LENGTH_FAILURE,
-			error: err.response,
+			error: err.response.data,
 		});
 	}
 }
@@ -135,9 +135,19 @@ function* deleteNote(action) {
 	try {
 		console.log('delete', action.data);
 		const result = yield call(deleteNoteAPI, action.data);
+		const result2 = yield call(fetchNoteLengthAPI, action.data);
+		const result3 = yield call(fetchNoteListAPI, action.data);
 		yield put({
 			type: DELETE_NOTE_SUCCESS,
 			data: result.data,
+		});
+		yield put({
+			type: FETCH_NOTE_LENGTH_SUCCESS,
+			data: result2.data,
+		});
+		yield put({
+			type: FETCH_NOTE_LIST_SUCCESS,
+			data: result3.data,
 		});
 	} catch (err) {
 		console.error(err);

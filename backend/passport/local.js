@@ -13,16 +13,14 @@ module.exports = () => {
 			},
 			async (id, password, done) => {
 				try {
-					const exUser = User.findeOne({
+					const exUser = await User.findOne({
 						where: {
-							[Op.or]: {
-								email: id,
-								nickname: id,
-							},
+							[Op.or]: [{ email: id }, { nickname: id }],
 						},
 					});
 					if (!exUser) {
-						return done(null, false, { reason: CHECK_OUT_LOGIN_INFO });
+						// return done(null, false, { reason: CHECK_OUT_LOGIN_INFO });
+						return done(null, false, { reason: '유저없음' });
 					}
 					const result = await bcrypt.compare(password, exUser.password);
 					if (result) {

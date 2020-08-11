@@ -11,7 +11,7 @@ const MainPostsTitle = styled.div`
 	margin-bottom: 5px;
 	font-size: 14px;
 `;
-const RepoContents = () => {
+const RepoContents = ({ page }) => {
 	const { mainNotes } = useSelector(state => state.note);
 
 	return (
@@ -25,7 +25,7 @@ const RepoContents = () => {
 			>
 				{mainNotes.map((note, index) => (
 					<Col span="12" key={note.id}>
-						<RepoCard key={note.id} note={note}></RepoCard>
+						<RepoCard key={note.id} note={note} page={page}></RepoCard>
 					</Col>
 				))}
 			</Row>

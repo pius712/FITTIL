@@ -13,10 +13,12 @@ const sequelize = new Sequelize(
 const db = {};
 
 db.User = require('./user')(sequelize, DataTypes);
-db.Post = require('./post')(sequelize, DataTypes);
-db.Image = require('./image')(sequelize, DataTypes);
-db.Comment = require('./comment')(sequelize, DataTypes);
-
+db.Note = require('./note')(sequelize, DataTypes);
+// db.Image = require('./image')(sequelize, DataTypes);
+// db.Comment = require('./comment')(sequelize, DataTypes);
+// db.Hashtag = require('./hashtag')(sequelize, DataTypes);
+db.Setting = require('./setting')(sequelize, DataTypes);
+db.MuscleArea = require('./musclearea')(sequelize, DataTypes);
 Object.keys(db).forEach(modelName => {
 	if (db[modelName].associate) {
 		db[modelName].associate(db);

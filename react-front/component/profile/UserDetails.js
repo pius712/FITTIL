@@ -6,14 +6,21 @@ import {
 	CompassOutlined,
 	FacebookOutlined,
 	InstagramOutlined,
+	TeamOutlined,
+	StarOutlined,
 } from '@ant-design/icons';
+import Link from 'next/link';
+const ProfileItemList = styled.ul`
+	margin-top: 10px;
+`;
 const ProfileItemWrapper = styled.li`
 	display: flex;
 	align-items: center;
+	/* justify-content: space-evenly; */
 `;
 const ProfileItem = styled.div`
 	display: flex;
-	/* justify-content: center; */
+	/* justify-content: flex-start; */
 	align-items: center;
 	margin-left: 5px;
 	/* padding: 3px */
@@ -22,44 +29,80 @@ const ProfileItem = styled.div`
 	width: 100%;
 	font-size: 12px;
 `;
-const UserDetails = () => {
+const FollowInfoWrapper = styled.li``;
+const FollowInfo = styled.span`
+	font-size: 12px;
+`;
+const UserDetails = ({ targetname }) => {
 	const dispatch = useDispatch();
-	const { me } = useSelector(state => state.user);
-	// console.log(me);
-	// const note = me.note ? me.note : '';
-	const job = me.job ? me.job : '';
-	const location = me.location ? me.location : '';
-	const facebook = me.facebook ? me.facebook : '';
-	const instagram = me.instagram ? me.instagram : '';
-
+	const { targetUserInfo, me } = useSelector(state => state.user);
+	const job = targetname === me.nickname ? me.job : targetUserInfo.job;
+	const location =
+		targetname === me.nickname ? me.location : targetUserInfo.location;
+	const facebook =
+		targetname === me.nickname ? me.facebook : targetUserInfo.facebook;
+	const instagram =
+		targetname === me.nickname ? me.instagram : targetUserInfo.instagram;
+	//
 	return (
 		<>
-			<ul>
-				{me.job ? (
+			<ProfileItemList>
+				<FollowInfo>
+					<TeamOutlined />
+					<FollowInfo>
+						<Link
+							href="/[targetname]/followers"
+							as={`/${targetname}/followers`}
+						>
+							<a>
+								{targetname === me.nickname
+									? ` ${me.Followers.length} followers · `
+									: ` ${targetUserInfo.Followers.length} followers · `}
+							</a>
+						</Link>
+					</FollowInfo>
+					<FollowInfo>
+						<Link
+							href="/[targetname]/followings"
+							as={`/${targetname}/followings`}
+						>
+							<a>
+								{targetname === me.nickname
+									? `${me.Followings.length} followings `
+									: `${targetUserInfo.Followings.length} followings `}
+							</a>
+						</Link>
+					</FollowInfo>
+					{/* <StarWrapper> */}
+					<StarOutlined />
+					<FollowInfo>{` 0`}</FollowInfo>
+					{/* </StarWrapper> */}
+				</FollowInfo>
+				{job ? (
 					<ProfileItemWrapper>
 						<IdcardOutlined />
-						<ProfileItem>{me.job}</ProfileItem>
+						<ProfileItem>{job}</ProfileItem>
 					</ProfileItemWrapper>
 				) : null}
-				{me.location ? (
+				{location ? (
 					<ProfileItemWrapper>
 						<CompassOutlined />
-						<ProfileItem>{me.location}</ProfileItem>
+						<ProfileItem>{location}</ProfileItem>
 					</ProfileItemWrapper>
 				) : null}
-				{me.facebook ? (
+				{facebook ? (
 					<ProfileItemWrapper>
 						<FacebookOutlined />
-						<ProfileItem>{me.facebook}</ProfileItem>
+						<ProfileItem>{facebook}</ProfileItem>
 					</ProfileItemWrapper>
 				) : null}
-				{me.instagram ? (
+				{instagram ? (
 					<ProfileItemWrapper>
 						<InstagramOutlined />
-						<ProfileItem>{me.instagram}</ProfileItem>
+						<ProfileItem>{instagram}</ProfileItem>
 					</ProfileItemWrapper>
 				) : null}
-			</ul>
+			</ProfileItemList>
 		</>
 	);
 };

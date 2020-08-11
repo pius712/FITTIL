@@ -3,18 +3,33 @@ module.exports = (sequelize, DataTypes) => {
 		'User',
 		{
 			nickname: {
-				type: DataTypes.String(20),
+				type: DataTypes.STRING(100),
 				allowNull: false,
 				unique: true,
 			},
 			email: {
-				type: DataTypes.String(20),
+				type: DataTypes.STRING(100),
 				allowNull: false,
 				unique: true,
 			},
 			password: {
-				type: DataTypes.String(100),
+				type: DataTypes.STRING(200),
 				allowNull: false,
+			},
+			note: {
+				type: DataTypes.STRING(100),
+			},
+			job: {
+				type: DataTypes.STRING(100),
+			},
+			location: {
+				type: DataTypes.STRING(100),
+			},
+			facebook: {
+				type: DataTypes.STRING(100),
+			},
+			instagram: {
+				type: DataTypes.STRING(100),
 			},
 		},
 		{
@@ -24,13 +39,14 @@ module.exports = (sequelize, DataTypes) => {
 	);
 	User.associate = db => {
 		// 게시글
-		db.User.hasMany(db.Post);
+		db.User.hasMany(db.Note);
 		//댓글
-		db.User.hasMany(db.Comment);
+		// db.User.hasMany(db.Comment);
 		// 게시글 좋아요
-		db.User.belongsToMany(db.Post, { through: 'Like', as: 'LikedPosts' });
+		// db.User.belongsToMany(db.Note, { through: 'Like', as: 'LikedNotes' });
 		// 게시글 Star
-		db.User.belongsToMany(db.Post, { through: 'Star', as: 'StaredPosts' });
+		// db.User.belongsToMany(db.Note, { through: 'Star', as: 'StaredNotes' });
+
 		// 팔로우 팔로잉
 		db.User.belongsToMany(db.User, {
 			through: 'Follow',
@@ -39,9 +55,10 @@ module.exports = (sequelize, DataTypes) => {
 		});
 		db.User.belongsToMany(db.User, {
 			through: 'Follow',
-			as: 'Followigs',
+			as: 'Followings',
 			foreignKey: 'FollowerId',
 		});
+		db.User.belongsTo(db.Setting);
 	};
 	return User;
 };

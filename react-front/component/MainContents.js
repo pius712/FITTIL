@@ -2,10 +2,10 @@ import React from 'react';
 import MainNotes from './MainNotes';
 import WorkoutRecords from './WorkoutRecords';
 
-const MainContents = () => {
+const MainContents = ({ targetname }) => {
 	return (
 		<>
-			<MainNotes></MainNotes>
+			<MainNotes targetname={targetname}></MainNotes>
 			<WorkoutRecords></WorkoutRecords>
 		</>
 	);

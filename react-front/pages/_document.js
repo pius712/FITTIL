@@ -37,6 +37,7 @@ export default class MyDocument extends Document {
 					<style jsx global>{`
 						#__next {
 							position: relative;
+							min-height: 100%;
 						}
 					`}</style>
 				</body>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { Avatar, Button, Divider } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
@@ -6,7 +6,9 @@ import useInput from '../../hooks/useInput';
 import DetailEditForm from './DetailEditForm';
 import UserDetails from './UserDetails';
 import { useDispatch, useSelector } from 'react-redux';
-import { EDIT_PROFILE_REQUEST } from '../../actions';
+import { EDIT_PROFILE_REQUEST, FETCH_USER_INFO_REQUEST } from '../../actions';
+import FollowButton from './FollowButton';
+
 const ProfileWrapper = styled.div`
 	/* margin-top: 30px; */
 	padding: 0px 25px;
@@ -54,30 +56,38 @@ const EditCancelButton = styled(Button)`
 
 // const EditForm = styled.form``;
 // const UserDetail = styled.div``;
-const Profile = () => {
+const Profile = ({ targetname }) => {
 	const dispatch = useDispatch();
-	const { me } = useSelector(state => state.user);
-	// console.log(me);
-	const note = me.note ? me.note : '';
-	const job = me.job ? me.job : '';
-	const location = me.location ? me.location : '';
-	const facebook = me.facebook ? me.facebook : '';
-	const instagram = me.instagram ? me.instagram : '';
+	const { targetUserInfo, me } = useSelector(state => state.user);
+
+	const isMyProfile = targetname === me.nickname;
+	const note = isMyProfile ? me.note : targetUserInfo.note;
+	// targetUserInfo && targetUserInfo.note;
+	const job = isMyProfile ? me.job : targetUserInfo.job;
+	// targetUserInfo && targetUserInfo.job;
+	const location = isMyProfile ? me.location : targetUserInfo.location;
+	// targetUserInfo && targetUserInfo.location;
+	const facebook = isMyProfile ? me.facebook : targetUserInfo.facebook;
+	// targetUserInfo && targetUserInfo.facebook;
+	const instagram = isMyProfile ? me.instagram : targetUserInfo.instagram;
+	// targetUserInfo && targetUserInfo.instagram;
 	const [isEditOpened, setIsEditOpend] = useState(false);
 	const [userNote, onChangeUserNote] = useInput(note || '');
 	const [jobInfo, onChangeJobInfo] = useInput(job || '');
 	const [locationInfo, onChangeLocationInfo] = useInput(location || '');
 	const [facebookInfo, onChangeFacebookInfo] = useInput(facebook || '');
 	const [instagramInfo, onChangeInstagramInfo] = useInput(instagram || '');
-
+	// console.log('information', userNote, jobInfo, locationInfo);
 	const onEditProfile = useCallback(e => {
 		e.preventDefault();
+		// console.log('clicked');
+
 		setIsEditOpend(!isEditOpened);
 	}, []);
 	const onSave = useCallback(
 		e => {
 			e.preventDefault();
-			console.log(userNote, jobInfo, locationInfo, facebookInfo, instagramInfo);
+			// console.log(userNote, jobInfo, locationInfo, facebookInfo, instagramInfo);
 
 			dispatch({
 				type: EDIT_PROFILE_REQUEST,
@@ -104,6 +114,9 @@ const Profile = () => {
 		e.preventDefault();
 		setIsEditOpend(false);
 	}, []);
+	// if (!targetUserInfo || !me) {
+	// 	return '정보로딩중';
+	// }
 	return (
 		<ProfileWrapper>
 			<UserProfile>
@@ -111,41 +124,55 @@ const Profile = () => {
 					<CustomAvatar></CustomAvatar>
 				</AvatarWrapper>
 
-				<UserName>{me.nickname}</UserName>
+				<UserName>{targetname}</UserName>
 			</UserProfile>
-			{me.note ? <UserNote>{note}</UserNote> : null}
+			{userNote ? <UserNote>{userNote}</UserNote> : null}
 
-			{isEditOpened ? (
-				<>
-					<DetailEditForm
-						userNote={userNote}
-						onChangeUserNote={onChangeUserNote}
-						jobInfo={jobInfo}
-						onChangeJobInfo={onChangeJobInfo}
-						locationInfo={locationInfo}
-						onChangeLocationInfo={onChangeLocationInfo}
-						facebookInfo={facebookInfo}
-						onChangeFacebookInfo={onChangeFacebookInfo}
-						instagramInfo={instagramInfo}
-						onChangeInstagramInfo={onChangeInstagramInfo}
-					></DetailEditForm>
-					<EditButtonWrapper>
-						<EditSaveButton size="small" block onClick={onSave}>
-							Save
-						</EditSaveButton>
-						<EditCancelButton size="small" block onClick={onCancel}>
-							Cancel
-						</EditCancelButton>
-					</EditButtonWrapper>
-				</>
-			) : (
-				<>
-					<EditButton size="small" block onClick={onEditProfile}>
-						Edit Profile
-					</EditButton>
-					<UserDetails></UserDetails>
-				</>
-			)}
+			{
+				isEditOpened ? (
+					<>
+						<DetailEditForm
+							userNote={userNote}
+							onChangeUserNote={onChangeUserNote}
+							jobInfo={jobInfo}
+							onChangeJobInfo={onChangeJobInfo}
+							locationInfo={locationInfo}
+							onChangeLocationInfo={onChangeLocationInfo}
+							facebookInfo={facebookInfo}
+							onChangeFacebookInfo={onChangeFacebookInfo}
+							instagramInfo={instagramInfo}
+							onChangeInstagramInfo={onChangeInstagramInfo}
+						></DetailEditForm>
+						<EditButtonWrapper>
+							<EditSaveButton size="small" block onClick={onSave}>
+								Save
+							</EditSaveButton>
+							<EditCancelButton size="small" block onClick={onCancel}>
+								Cancel
+							</EditCancelButton>
+						</EditButtonWrapper>
+					</>
+				) : (
+					<>
+						{targetUserInfo.id === me.id ? (
+							<EditButton size="small" block onClick={onEditProfile}>
+								Edit Profile
+							</EditButton>
+						) : (
+							<FollowButton targetname={targetname}>follow</FollowButton>
+						)}
+					</>
+				)
+				// (
+				// 	<>
+				// 		<EditButton size="small" block onClick={onEditProfile}>
+				// 			Edit Profile
+				// 		</EditButton>
+				// 		<UserDetails></UserDetails>
+				// 	</>
+				// )
+			}
+			<UserDetails targetname={targetname}></UserDetails>
 			<Divider style={{ margin: '20px 0', borderTop: '1px solid #636e72' }} />
 		</ProfileWrapper>
 	);

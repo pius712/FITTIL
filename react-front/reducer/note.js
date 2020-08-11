@@ -5,7 +5,6 @@ import {
 	FETCH_NOTE_REQUEST,
 	FETCH_NOTE_SUCCESS,
 	FETCH_NOTE_FAILURE,
-	SELECT_MENU_REQUEST,
 	UPLOAD_NOTE_REQUEST,
 	UPLOAD_NOTE_SUCCESS,
 	UPLOAD_NOTE_FAILURE,
@@ -18,6 +17,8 @@ import {
 	DELETE_NOTE_REQUEST,
 	DELETE_NOTE_SUCCESS,
 	DELETE_NOTE_FAILURE,
+	SELECT_MENU_REQUEST,
+	SELECT_NAVIGATION_REQUEST,
 } from '../actions';
 import produce from 'immer';
 export const initialState = {
@@ -97,8 +98,7 @@ export const initialState = {
 	],
 	singleNote: {},
 	imagePaths: [],
-	noteLength: 0,
-	selectedMenu: '',
+	noteLength: 1,
 	descriptionTitle: 'Built for \n 헬린이',
 	descriptionContent: `FITTIL은 헬린이의 운동능력 향상을 위한 플랫폼입니다. 초급자부터 상급자까지 아무나, 자신의 운동일지와 루틴을 올리고,
 	관리할 수 있습니다.`,
@@ -120,7 +120,8 @@ export const initialState = {
 	deleteNoteLoading: false,
 	deleteNoteDone: false,
 	deleteNoteError: null,
-
+	selectedMenu: '',
+	selectedNavigation: '',
 	// nameLoading: false,
 	// nameDone: false,
 	// nameError: null,
@@ -240,9 +241,12 @@ const reducer = (state = initialState, action) => {
 				draftState.deleteNoteDone = false;
 				draftState.deleteNoteError = action.error;
 				break;
-			// 네비게이션 선택
+			// main 화면네비게이션 선택
 			case SELECT_MENU_REQUEST:
 				draftState.selectedMenu = action.data;
+				break;
+			case SELECT_NAVIGATION_REQUEST:
+				draftState.selectedNavigation = action.data;
 				break;
 			// case FETCH_NOTE_LIST_REQUEST:
 			// 	break;

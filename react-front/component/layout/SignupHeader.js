@@ -30,10 +30,10 @@ const FlexMenu = styled.div`
 const AppHeader = () => {
 	const onLogin = useCallback(() => {
 		Router.push('/login');
-	});
+	}, []);
 	const onSignin = useCallback(() => {
 		Router.push('/');
-	});
+	}, []);
 	return (
 		<Header>
 			<GridRow>
@@ -44,7 +44,7 @@ const AppHeader = () => {
 					xl={{ span: 16, offset: 4 }}
 				>
 					<HeaderContainer>
-						<Link href="main">
+						<Link href="/">
 							<Logo>FITTIL</Logo>
 						</Link>
 						<FlexMenu>

@@ -9,7 +9,9 @@ const passport = require('passport');
 const db = require('./models');
 const passportConfig = require('./passport');
 const userRouter = require('./router/user');
-const postRouter = require('./router/post');
+const noteRouter = require('./router/note');
+const hpp = require('hpp');
+const helmet = require('helmet');
 // 설정
 dotenv.config();
 passportConfig();
@@ -26,10 +28,16 @@ db.sequelize
 const app = express();
 
 // 미들웨어 설정
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'production') {
+	app.use(morgan('combined'));
+	app.use(helmet());
+	app.use(hpp());
+} else {
+	app.use(morgan('dev'));
+}
 app.use(
 	cors({
-		origin: 'http://localhost:3000',
+		origin: ['http://localhost:80', 'http://fittil.com'],
 		credentials: true,
 	}),
 );
@@ -42,6 +50,11 @@ app.use(
 		resave: false,
 		saveUninitialized: false,
 		secret: process.env.COOKIE_SECRET,
+		cookie: {
+			httpOnly: true,
+			secure: false,
+			domain: process.env.NODE_ENV === 'production' && '.fittil.com',
+		},
 	}),
 );
 app.use(passport.initialize());
@@ -49,8 +62,8 @@ app.use(passport.session());
 
 // 라우터 등록
 app.use('/user', userRouter);
-app.use('/post', postRouter);
+app.use('/note', noteRouter);
 
-app.listen(8080, () => {
+app.listen(80, () => {
 	console.log('express sever started');
 });

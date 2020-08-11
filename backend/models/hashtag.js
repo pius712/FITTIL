@@ -2,8 +2,10 @@ module.exports = (sequelize, DataTypes) => {
 	const Hashtag = sequelize.define(
 		'Hashtag',
 		{
-			name: DataTypes.String(200),
-			allowNull: false,
+			name: {
+				type: DataTypes.STRING(200),
+				allowNull: false,
+			},
 		},
 		{
 			charset: 'utf8mb4',
@@ -12,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 	);
 	Hashtag.associate = db => {
 		// 게시글 해쉬태그
-		db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' });
+		db.Hashtag.belongsToMany(db.Note, { through: 'NoteHashtag' });
 	};
 	return Hashtag;
 };

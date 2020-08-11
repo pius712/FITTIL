@@ -42,7 +42,7 @@ const AppMenu = ({ targetname }) => {
 				icon={<SaveOutlined />}
 			>
 				<Link href="/[targetname]/repository" as={`/${targetname}/repository`}>
-					<a>repositories</a>
+					<a>Repositories</a>
 				</Link>
 			</Menu.Item>
 			<Menu.Item
@@ -50,7 +50,9 @@ const AppMenu = ({ targetname }) => {
 				key="statistics"
 				icon={<LineChartOutlined />}
 			>
-				Statistics
+				<Link href="/[targetname]/statistics" as={`/${targetname}/statistics`}>
+					<a>Statistics</a>
+				</Link>
 			</Menu.Item>
 			{/* <Menu.Item key="alipay">
 				<a href="https://ant.design" target="_blank" rel="noopener noreferrer">

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Select, Badge, Input, Divider, Button, Layout } from 'antd';
+import { Select, Badge, Input, Divider, Button, Layout, Modal } from 'antd';
 import { PlusOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { UPLOAD_NOTE_REQUEST } from '../actions';
@@ -47,7 +47,14 @@ const CreateNoteForm = () => {
 	const [title, onChangeTitle] = useInput(''); // 타이틀 값
 	const [content, onChangeContent] = useInput(''); // 내용 값
 	// 초기 값
-	const [partItems, setPartItems] = useState(['가슴', '등', '어깨', '하체']);
+	const [partItems, setPartItems] = useState([
+		'가슴',
+		'등',
+		'어깨',
+		'하체',
+		'이두',
+		'삼두',
+	]);
 
 	// 선택창에서 새로 만드는 부분 state
 	const [partItem, setPartItem] = useState('');
@@ -78,6 +85,18 @@ const CreateNoteForm = () => {
 	const handleSubmit = useCallback(
 		e => {
 			e.preventDefault();
+			if (
+				!title ||
+				!content ||
+				!selectedLevel ||
+				!selectedPartItem ||
+				!selectedOption
+			) {
+				return Modal.warning({
+					title: '항목을 입력해주세요',
+					content: '모든 항목을 입력해주세요',
+				});
+			}
 			dispatch({
 				type: UPLOAD_NOTE_REQUEST,
 				data: {
@@ -131,7 +150,7 @@ const CreateNoteForm = () => {
 							<Badge color="blue" text="강" />
 						</Select.Option>
 						<Select.Option value="중">
-							<Badge color="yellow" text="중" />
+							<Badge color="green" text="중" />
 						</Select.Option>
 						<Select.Option value="약">
 							<Badge color="red" text="약" />
@@ -148,7 +167,7 @@ const CreateNoteForm = () => {
 						dropdownRender={menu => (
 							<div>
 								{menu}
-								<Divider style={{ margin: '4px 0' }} />
+								{/* <Divider style={{ margin: '4px 0' }} />
 								<div
 									style={{
 										display: 'flex',
@@ -169,10 +188,10 @@ const CreateNoteForm = () => {
 											cursor: 'pointer',
 										}}
 										onClick={addItem}
-									>
-										<PlusOutlined /> 부위 추가
-									</a>
-								</div>
+									> */}
+								{/* <PlusOutlined /> 부위 추가
+									</a> */}
+								{/* </div> */}
 							</div>
 						)}
 					>

@@ -7,16 +7,28 @@ import axios from 'axios';
 import { LOAD_MY_INFO_REQUEST } from '../actions';
 import { END } from 'redux-saga';
 const Home = () => {
-	const { me, registerDone, registerError } = useSelector(state => state.user);
+	const { me, registerDone, registerError, logoutLoading } = useSelector(
+		state => state.user,
+	);
 
+	// useEffect(() => {
+	// 	if (registerDone && me && me.id) {
+	// 		dispatch({
+	// 			type: LOGIN_USER_REQUEST,
+	// 			data: {
+	// 				id:
+	// 			}
+	// 		})
+	// 	}
+	// });
 	useEffect(() => {
-		if (me && me.id) {
-			Router.push('/main');
+		if (registerDone && me && me.id) {
+			Router.replace(`/${me.nickname}`);
 		}
 	});
 	useEffect(() => {
-		if (registerDone && me && me.id) {
-			Router.push('/main');
+		if (me && me.id) {
+			Router.replace(`/${me.nickname}`);
 		}
 	});
 

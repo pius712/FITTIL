@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { Menu, Dropdown, Modal, Select, Badge, Divider, Input } from 'antd';
 import {
@@ -12,8 +12,10 @@ import {
 	DELETE_NOTE_REQUEST,
 	REPORT_NOTE_REQUEST,
 	EDIT_NOTE_REQUEST,
+	FETCH_NOTE_LIST_REQUEST,
 } from '../actions';
 import useInput from '../hooks/useInput';
+import { useRouter } from 'next/router';
 const FormWrapper = styled.div`
 	/* border: 1px solid gray; */
 	border-radius: 5px;
@@ -45,10 +47,12 @@ const FormCheckBox = styled.div`
 	margin-top: 10px;
 `;
 
-const CardSetting = ({ note }) => {
+const CardSetting = ({ note, page }) => {
 	const dispatch = useDispatch();
 	const { me } = useSelector(state => state.user);
-	const { mainNotes } = useSelector(state => state.note);
+	const { mainNotes, deleteNoteDone } = useSelector(state => state.note);
+	const router = useRouter();
+	const { username } = router.query;
 
 	// 삭제 모달
 	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -157,6 +161,9 @@ const CardSetting = ({ note }) => {
 			type: DELETE_NOTE_REQUEST,
 			data: {
 				noteId: note.id,
+				userId: me.id,
+				targetname: username,
+				lastId: page,
 			},
 		});
 	}, []);
@@ -187,6 +194,7 @@ const CardSetting = ({ note }) => {
 	const handlePrivateOk = useCallback(() => {
 		setMakePrivateModalVisible(false);
 	}, []);
+
 	const myNoteMenu = (
 		<Menu>
 			<Menu.Item>

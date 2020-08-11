@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useInput from '../../hooks/useInput';
 import styled from 'styled-components';
-import { Button, Row, Col } from 'antd';
+import { Button, Row, Col, Modal } from 'antd';
 import { REGISTER_USER_REQUEST } from '../../actions';
 
 const LoginFormWrapper = styled.div`
@@ -35,9 +35,16 @@ const SignupForm = () => {
 	const [nickname, onChangeNickname] = useInput('');
 	const [email, onChangeEmail] = useInput('');
 	const [password, onChangePassword] = useInput('');
+	const { registerLoading } = useSelector(state => state.user);
 	const handleSubmit = useCallback(
 		e => {
 			e.preventDefault();
+			if (!nickname || !email || !password) {
+				return Modal.warning({
+					title: '항목을 입력해주세요',
+					content: '모든 항목을 입력해주세요',
+				});
+			}
 			dispatch({
 				type: REGISTER_USER_REQUEST,
 				data: {
@@ -83,7 +90,13 @@ const SignupForm = () => {
 					Make sure it's at least 15 characters OR at least 8 characters
 					including a number and a lowercase letter. Learn more.
 				</ControlNote>
-				<SignupButton size="large" shape="round" block htmlType="submit">
+				<SignupButton
+					size="large"
+					shape="round"
+					block
+					htmlType="submit"
+					loading={registerLoading}
+				>
 					Signup For FITTIL
 				</SignupButton>
 				<ControlNote>

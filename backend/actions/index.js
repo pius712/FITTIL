@@ -9,7 +9,12 @@ const NOT_FOUND_USER = '유저를 찾을 수 없습니다.';
 
 const NOT_FOUND_POST = '게시글을 찾을 수 없습니다.';
 
+const NOT_AVAILABLE_ACCESS = '접근 권한이 없습니다.';
+
 const LOGOUT_SUCCESS = '로그아웃되었습니다.';
+
+const SHOWN_AS_LIST = 2;
+const SHOWN_AS_CARD = 1;
 module.exports = {
 	USER_EXIST,
 	CHECK_OUT_LOGIN_INFO,
@@ -17,5 +22,8 @@ module.exports = {
 	LOGGED_IN,
 	NOT_FOUND_USER,
 	NOT_FOUND_POST,
+	NOT_AVAILABLE_ACCESS,
 	LOGOUT_SUCCESS,
+	SHOWN_AS_CARD,
+	SHOWN_AS_LIST,
 };

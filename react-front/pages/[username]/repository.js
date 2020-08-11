@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import AppLayout from '../../component/layout/AppLayout';
+import AppMenu from '../../component/layout/AppMenu';
+import Profile from '../../component/profile/Profile';
 import RepoNavigation from '../../component/repo/RepoNavigation';
 import RepoContents from '../../component/repo/RepoContents';
 import axios from 'axios';
@@ -8,6 +10,7 @@ import {
 	SELECT_MENU_REQUEST,
 	FETCH_NOTE_LIST_REQUEST,
 	FETCH_NOTE_LENGTH_REQUEST,
+	FETCH_USER_INFO_REQUEST,
 } from '../../actions';
 import { END } from 'redux-saga';
 import wrapper from '../../store/configureStore';
@@ -19,7 +22,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Repository = () => {
 	const dispatch = useDispatch();
-	const { me } = useSelector(state => state.user);
+	const { me, targetUserInfo, loadMyInfoError } = useSelector(
+		state => state.user,
+	);
 	const { mainNotes, noteLength } = useSelector(state => state.note);
 	const router = useRouter();
 	const { username } = router.query;
@@ -29,6 +34,7 @@ const Repository = () => {
 	// 	mainNotes[mainNotes.length - 1] && mainNotes[mainNotes.length - 1].id;
 	const onChangePage = useCallback(
 		value => {
+			setPage(value);
 			dispatch({
 				type: FETCH_NOTE_LIST_REQUEST,
 				data: {
@@ -41,27 +47,44 @@ const Repository = () => {
 		[username, mainNotes],
 	);
 	useEffect(() => {
-		if (!me && !me.id) {
+		// console.log('repo me', me);
+		if (!(me && me.id)) {
 			Router.replace('/');
 		}
-	});
+	}, [me]);
 	useEffect(() => {
-		dispatch({
-			type: FETCH_NOTE_LIST_REQUEST,
-			data: {
-				userId: me.id,
-				targetname: username,
-			},
-		});
-	}, []);
+		if (loadMyInfoError) {
+			alert('로그인이 필요합니다.');
+		}
+	});
+	// useEffect(() => {
+	// 	if (username && me) {
+
+	// 	}
+	// }, [username, me]);
+	// useEffect(() => {
+	// 	if (me) {
+
+	// 	}
+	// }, []);
+	// useEffect(() => {
+	// 	if (me) {
+
+	// 	}
+	// }, []);
+	if (!(me && targetUserInfo)) {
+		return '잠시만 기다려주세요...';
+	}
 	return (
 		<AppLayout
 			targetname={username}
+			left={<Profile targetname={username}></Profile>}
+			menu={<AppMenu targetname={username}></AppMenu>}
 			content={
 				<>
 					<RepoNavigation></RepoNavigation>
 					<Divider style={{ marginTop: '10px' }}></Divider>
-					<RepoContents></RepoContents>
+					<RepoContents page={page}></RepoContents>
 					<Pagination
 						style={{ textAlign: 'center' }}
 						defaultCurrent={1}
@@ -79,7 +102,7 @@ export default Repository;
 export const getServerSideProps = wrapper.getServerSideProps(
 	async ({ store, req, query }) => {
 		const cookie = req ? req.headers.cookie : '';
-		console.log(query);
+		// console.log(query);
 		axios.defaults.headers.Cookie = '';
 		if (req && cookie) {
 			axios.defaults.headers.Cookie = req.headers.cookie;
@@ -90,6 +113,24 @@ export const getServerSideProps = wrapper.getServerSideProps(
 		store.dispatch({
 			type: SELECT_MENU_REQUEST,
 			data: 'repo',
+		});
+		store.dispatch({
+			type: FETCH_NOTE_LENGTH_REQUEST,
+			data: {
+				targetname: query.username,
+			},
+		});
+		store.dispatch({
+			type: FETCH_USER_INFO_REQUEST,
+			data: {
+				targetname: query.username,
+			},
+		});
+		store.dispatch({
+			type: FETCH_NOTE_LIST_REQUEST,
+			data: {
+				targetname: query.username,
+			},
 		});
 		store.dispatch({
 			type: FETCH_NOTE_LENGTH_REQUEST,

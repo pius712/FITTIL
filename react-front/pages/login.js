@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import AppHeader from '../component/layout/SignupHeader';
-import { Row, Col, Button } from 'antd';
+import { Row, Col, Button, Modal } from 'antd';
 import useInput from '../hooks/useInput';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -64,10 +64,18 @@ const Login = () => {
 	const dispatch = useDispatch();
 	const [id, onChangeId] = useInput('');
 	const [password, onChangePassword] = useInput('');
-	const { loginDone, loginError, me } = useSelector(state => state.user);
+	const { loginDone, loginLoading, loginError, me } = useSelector(
+		state => state.user,
+	);
 	const handleSubmit = useCallback(
 		e => {
 			e.preventDefault();
+			if (!id || !password) {
+				return Modal.warning({
+					title: '항목을 입력해주세요',
+					content: '모든 항목을 입력해주세요',
+				});
+			}
 			dispatch({
 				type: LOGIN_USER_REQUEST,
 				data: {
@@ -79,8 +87,8 @@ const Login = () => {
 		[id, password],
 	);
 	useEffect(() => {
-		if (loginDone && me) {
-			Router.push(`/${me.nickname}`);
+		if (me) {
+			Router.replace(`/${me.nickname}`);
 		}
 	});
 
@@ -121,6 +129,7 @@ const Login = () => {
 									shape="round"
 									block
 									htmlType="submit"
+									loading={loginLoading}
 								>
 									Signin
 								</SigninButton>
@@ -131,7 +140,7 @@ const Login = () => {
 						</LoginFormWrapper>
 						<CreateAccount>
 							New to FITTIL?
-							<Link href="">
+							<Link href="/">
 								<a> Create an account</a>
 							</Link>
 						</CreateAccount>

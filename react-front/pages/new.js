@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Row, Col, Layout, Result, Button } from 'antd';
 import AppHeader from '../component/layout/AppHeader';
 import styled from 'styled-components';
@@ -8,7 +8,7 @@ import { LOAD_MY_INFO_REQUEST } from '../actions';
 import { END } from 'redux-saga';
 import CreateNoteForm from '../component/CreateNoteForm';
 import { useSelector } from 'react-redux';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 const Subhead = styled.div`
 	border-bottom: 1px solid gray;
 	padding-bottom: 15px;
@@ -19,14 +19,21 @@ const SubheadDescription = styled.div``;
 
 const New = () => {
 	const { uploadNoteDone } = useSelector(state => state.note);
+	const { me } = useSelector(state => state.user);
+
 	const handleGoHome = useCallback(() => {
-		Router.replace('/main');
+		Router.replace(`/${me.nickname}`);
 	});
+	useEffect(() => {
+		if (!(me && me.id)) {
+			Router.replace('/');
+		}
+	}, [me]);
 	return (
 		<>
 			{uploadNoteDone ? (
 				<>
-					<AppHeader></AppHeader>
+					<AppHeader targetname={me.nickname}></AppHeader>
 					<Result
 						title="업로드가 완료되었습니다."
 						extra={
@@ -37,9 +44,9 @@ const New = () => {
 					/>
 					<Layout.Footer
 						style={{
-							// position: 'fixed',
-							// bottom: 0,
-							// width: '100%',
+							position: 'absolute',
+							bottom: '0px',
+							width: '100%',
 							textAlign: 'center',
 						}}
 					>
@@ -48,7 +55,7 @@ const New = () => {
 				</>
 			) : (
 				<>
-					<AppHeader></AppHeader>
+					<AppHeader targetname={me.nickname}></AppHeader>
 					<main>
 						<Row>
 							<Col
