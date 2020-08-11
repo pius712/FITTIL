@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { backURL } from '../config/config';
-axios.defaults.baseURL = backURL;
+import { backUrl } from '../config/config.js';
+axios.defaults.baseURL = backUrl;
 // 'http://localhost:8080';
 axios.defaults.withCredentials = true;
 
