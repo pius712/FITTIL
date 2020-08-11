@@ -18,8 +18,8 @@ module.exports = {
 	},
 	production: {
 		username: 'root',
-		password: null,
-		database: process.env.DB_PASSWORD,
+		password: process.env.DB_PASSWORD,
+		database: 'FITTIL',
 		host: '127.0.0.1',
 		dialect: 'mysql',
 	},
