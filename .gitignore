@@ -21,6 +21,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-piusbook.pem
+fittil.pem
 .next
 .env
