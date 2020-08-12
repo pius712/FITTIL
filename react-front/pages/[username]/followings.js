@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import AppLayout from '../../component/layout/AppLayout';
 import AppMenu from '../../component/layout/AppMenu';
+import Spinner from '../../component/layout/Spinner';
 import Profile from '../../component/profile/Profile';
 import FollowList from '../../component/follow/FollowList';
 import { useSelector, useDispatch } from 'react-redux';
@@ -48,7 +49,7 @@ const Followings = () => {
 		}
 	});
 	if (!me || !followList || !targetUserInfo) {
-		return '잠시만 기다려주세요...';
+		return <Spinner></Spinner>;
 	}
 	return (
 		<AppLayout

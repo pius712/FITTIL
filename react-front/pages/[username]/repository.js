@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import AppLayout from '../../component/layout/AppLayout';
 import AppMenu from '../../component/layout/AppMenu';
 import Profile from '../../component/profile/Profile';
+import Spinner from '../../component/layout/Spinner';
 import RepoNavigation from '../../component/repo/RepoNavigation';
 import RepoContents from '../../component/repo/RepoContents';
 import axios from 'axios';
@@ -49,6 +50,7 @@ const Repository = () => {
 	useEffect(() => {
 		// console.log('repo me', me);
 		if (!(me && me.id)) {
+			alert('로그인이 필요합니다.');
 			Router.replace('/');
 		}
 	}, [me]);
@@ -73,7 +75,7 @@ const Repository = () => {
 	// 	}
 	// }, []);
 	if (!(me && targetUserInfo)) {
-		return '잠시만 기다려주세요...';
+		return <Spinner></Spinner>;
 	}
 	return (
 		<AppLayout

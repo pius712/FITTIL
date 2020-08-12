@@ -91,7 +91,11 @@ const Login = () => {
 			Router.replace(`/${me.nickname}`);
 		}
 	});
-
+	useEffect(() => {
+		if (loginError) {
+			alert(loginError);
+		}
+	});
 	return (
 		<>
 			<AppHeader></AppHeader>

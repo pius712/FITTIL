@@ -27,6 +27,11 @@ const Home = () => {
 		}
 	});
 	useEffect(() => {
+		if (registerError) {
+			alert(registerError);
+		}
+	});
+	useEffect(() => {
 		if (me && me.id) {
 			Router.replace(`/${me.nickname}`);
 		}

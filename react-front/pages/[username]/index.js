@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import AppLayout from '../../component/layout/AppLayout';
 import AppMenu from '../../component/layout/AppMenu';
+import Spinner from '../../component/layout/Spinner';
 import Profile from '../../component/profile/Profile';
 import { useSelector, useDispatch } from 'react-redux';
 import Router, { useRouter } from 'next/router';
@@ -23,17 +24,18 @@ const Main = () => {
 	const { username } = router.query;
 	const dispatch = useDispatch();
 	useEffect(() => {
-		if (!me) {
+		if (!me || !targetUserInfo) {
 			Router.push('/');
 		}
 	}, [me]);
 	useEffect(() => {
 		if (loadMyInfoError) {
 			alert('로그인이 필요합니다.');
+			Router.replace('/');
 		}
 	});
 	if (!me || !targetUserInfo) {
-		return '잠시만 기다려주세요...';
+		return <Spinner></Spinner>;
 	}
 	return (
 		<AppLayout

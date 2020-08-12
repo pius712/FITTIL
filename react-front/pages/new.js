@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { Row, Col, Layout, Result, Button } from 'antd';
 import AppHeader from '../component/layout/AppHeader';
+import Spinner from '../component/layout/Spinner';
 import styled from 'styled-components';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
@@ -26,9 +27,14 @@ const New = () => {
 	});
 	useEffect(() => {
 		if (!(me && me.id)) {
+			alert('로그인이 필요합니다.');
 			Router.replace('/');
 		}
 	}, [me]);
+
+	if (!me) {
+		return <Spinner></Spinner>;
+	}
 	return (
 		<>
 			{uploadNoteDone ? (

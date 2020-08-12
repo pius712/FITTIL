@@ -9,11 +9,27 @@
     "static/development/_ssgManifest.js"
   ],
   "pages": {
+    "/": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
     "/[username]": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
+    "/[username]/followers": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/[username]/followings": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
     "/[username]/repository": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/[username]/statistics": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
@@ -27,6 +43,10 @@
     ],
     "/_polyfills": [
       "static/runtime/polyfills.js"
+    ],
+    "/index": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
     ]
   }
 }
