@@ -45,7 +45,7 @@ router.get('/email/:nickname', async (req, res, next) => {
 		if (!pendingUser) {
 			return res.status(403).send(NOT_FOUND_USER);
 		}
-		const key = generateKey(req.body.email);
+		const key = generateKey(pendingUser.email);
 		const options = mailOptions(pendingUser.email, key);
 		transport.sendMail(options, (err, info) => {
 			if (err) {

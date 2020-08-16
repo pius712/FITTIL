@@ -66,7 +66,7 @@ app.use('/user', userRouter);
 app.use('/note', noteRouter);
 app.use('/auth', authRouter);
 
-app.listen(80, () => {
+app.listen(8080, () => {
 	console.log('express sever started');
 });
 

@@ -23,12 +23,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Repository = () => {
 	const dispatch = useDispatch();
-	const { me, targetUserInfo, loadMyInfoError } = useSelector(
+	const { me, targetUserInfo, loadMyInfoError, logoutDone } = useSelector(
 		state => state.user,
 	);
-	const { mainNotes, noteLength, logoutDone } = useSelector(
-		state => state.note,
-	);
+	const { mainNotes, noteLength } = useSelector(state => state.note);
 	const router = useRouter();
 	const { username } = router.query;
 
@@ -58,24 +56,10 @@ const Repository = () => {
 	});
 	useEffect(() => {
 		if (logoutDone) {
+			console.log('logoutdone');
 			Router.push('/');
 		}
 	}, [logoutDone]);
-	// useEffect(() => {
-	// 	if (username && me) {
-
-	// 	}
-	// }, [username, me]);
-	// useEffect(() => {
-	// 	if (me) {
-
-	// 	}
-	// }, []);
-	// useEffect(() => {
-	// 	if (me) {
-
-	// 	}
-	// }, []);
 	if (!(me && targetUserInfo)) {
 		return <LoadingSpinner></LoadingSpinner>;
 	}

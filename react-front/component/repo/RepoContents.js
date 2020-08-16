@@ -25,7 +25,12 @@ const RepoContents = ({ page }) => {
 			>
 				{mainNotes.map((note, index) => (
 					<Col span="12" key={note.id}>
-						<RepoCard key={note.id} note={note} page={page}></RepoCard>
+						<RepoCard
+							key={note.id}
+							note={note}
+							page={page}
+							public_availability={note.public_availability}
+						></RepoCard>
 					</Col>
 				))}
 			</Row>

@@ -1,8 +1,12 @@
 import React from 'react';
 import { Card, Badge } from 'antd';
-import { FileDoneOutlined } from '@ant-design/icons';
+import {
+	FileDoneOutlined,
+	TeamOutlined,
+	LockOutlined,
+} from '@ant-design/icons';
 import moment from 'moment';
-const PostCard = ({ note }) => {
+const PostCard = ({ note, public_availability }) => {
 	moment.locale('ko');
 	const noteLen = note.MuscleAreas.length;
 	return (
@@ -10,7 +14,21 @@ const PostCard = ({ note }) => {
 			<Card
 				style={{ minHeight: '150px' }}
 				size="small"
-				title={moment(note.createdAt).format('YYYY-MM-D')}
+				title={
+					<>
+						<span>
+							{moment(note.createdAt).format('YYYY-MM-D')}
+							&nbsp;&nbsp;&nbsp;
+						</span>
+						<span>
+							{public_availability === 'public' ? (
+								<TeamOutlined />
+							) : (
+								<LockOutlined />
+							)}
+						</span>
+					</>
+				}
 			>
 				<Card.Meta
 					avatar={<FileDoneOutlined />}

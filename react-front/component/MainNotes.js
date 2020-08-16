@@ -65,7 +65,11 @@ const MainPosts = ({ targetname }) => {
 					mainNotes.map((note, index) =>
 						index < 6 ? (
 							<Col span="12" key={note.id}>
-								<NoteCard key={note.id} note={note}></NoteCard>
+								<NoteCard
+									key={note.id}
+									note={note}
+									public_availability={note.public_availability}
+								></NoteCard>
 							</Col>
 						) : null,
 					)

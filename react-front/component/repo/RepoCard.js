@@ -1,7 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import CardSetting from '../CardSetting';
 import { Card, Badge, Modal } from 'antd';
-import { FileDoneOutlined } from '@ant-design/icons';
+import {
+	FileDoneOutlined,
+	TeamOutlined,
+	LockOutlined,
+} from '@ant-design/icons';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -10,7 +14,7 @@ const ExtraDescription = styled.div`
 	position: absolute;
 	bottom: 5px;
 `;
-const RepoCard = ({ note, page }) => {
+const RepoCard = ({ note, page, public_availability }) => {
 	moment.locale('ko');
 	const noteLen = note.MuscleAreas.length;
 	const [zoomNoteVisible, setZoomNoteVisible] = useState(false);
@@ -28,7 +32,21 @@ const RepoCard = ({ note, page }) => {
 			<Card
 				size="small"
 				style={{ minHeight: '200px', maxHeight: '250px' }}
-				title={moment(note.createdAt).format('YYYY-MM-D')}
+				title={
+					<>
+						<span>
+							{moment(note.createdAt).format('YYYY-MM-D')}
+							&nbsp;&nbsp;&nbsp;
+						</span>
+						<span>
+							{public_availability === 'public' ? (
+								<TeamOutlined />
+							) : (
+								<LockOutlined />
+							)}
+						</span>
+					</>
+				}
 				extra={<CardSetting page={page} note={note} />}
 			>
 				<Card.Meta
