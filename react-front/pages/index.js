@@ -7,30 +7,27 @@ import axios from 'axios';
 import { LOAD_MY_INFO_REQUEST } from '../actions';
 import { END } from 'redux-saga';
 const Home = () => {
-	const { me, registerDone, registerError, logoutLoading } = useSelector(
-		state => state.user,
-	);
+	const {
+		me,
+		pendingUser,
+		registerDone,
+		registerError,
+		logoutLoading,
+	} = useSelector(state => state.user);
 
-	// useEffect(() => {
-	// 	if (registerDone && me && me.id) {
-	// 		dispatch({
-	// 			type: LOGIN_USER_REQUEST,
-	// 			data: {
-	// 				id:
-	// 			}
-	// 		})
-	// 	}
-	// });
+	// 이메일 인증 보낸것 완료.
 	useEffect(() => {
-		if (registerDone && me && me.id) {
-			Router.replace(`/${me.nickname}`);
+		if (registerDone) {
+			Router.replace(`/${pendingUser.nickname}/join`);
 		}
 	});
+	// 이메일 인증 실패.
 	useEffect(() => {
 		if (registerError) {
 			alert(registerError);
 		}
 	});
+	// 이미 로그인 되어있을때,
 	useEffect(() => {
 		if (me && me.id) {
 			Router.replace(`/${me.nickname}`);

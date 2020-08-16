@@ -11,6 +11,15 @@ import {
 	REGISTER_USER_REQUEST,
 	REGISTER_USER_SUCCESS,
 	REGISTER_USER_FAILURE,
+	AUTH_USER_REQUEST,
+	AUTH_USER_SUCCESS,
+	AUTH_USER_FAILURE,
+	AUTH_AGAIN_REQUEST,
+	AUTH_AGAIN_SUCCESS,
+	AUTH_AGAIN_FAILURE,
+	FETCH_PENDING_USER_REQUEST,
+	FETCH_PENDING_USER_SUCCESS,
+	FETCH_PENDING_USER_FAILURE,
 	LOGIN_USER_REQUEST,
 	LOGIN_USER_SUCCESS,
 	LOGIN_USER_FAILURE,
@@ -60,6 +69,9 @@ import {
 } from '../actions';
 import {
 	registerUserAPI,
+	fetchPendingUserAPI,
+	authUserAPI,
+	authAgainAPI,
 	loginUserAPI,
 	logoutUserAPI,
 	loadMyInfoAPI,
@@ -91,6 +103,55 @@ function* registerUser(action) {
 		});
 	}
 }
+// 이메일 인증
+function* authUser(action) {
+	try {
+		const result = yield call(authUserAPI, action.data);
+		yield put({
+			type: AUTH_USER_SUCCESS,
+			data: result.data,
+		});
+	} catch (err) {
+		console.error(err);
+		yield put({
+			type: AUTH_USER_FAILURE,
+			error: err.response.data,
+		});
+	}
+}
+// 이메일 재전송
+function* authAgain(action) {
+	try {
+		const result = yield call(authAgainAPI, action.data);
+		yield put({
+			type: AUTH_AGAIN_SUCCESS,
+			data: result.data,
+		});
+	} catch (err) {
+		console.error(err);
+		yield put({
+			type: AUTH_AGAIN_FAILURE,
+			error: err.response.data,
+		});
+	}
+}
+// pending User 가져오기
+function* fetchPendingUser(action) {
+	try {
+		const result = yield call(fetchPendingUserAPI, action.data);
+		yield put({
+			type: FETCH_PENDING_USER_SUCCESS,
+			data: result.data,
+		});
+	} catch (err) {
+		console.error(err);
+		yield put({
+			type: FETCH_PENDING_USER_FAILURE,
+			error: err.response.data,
+		});
+	}
+}
+// 인증 메일 다시 보내기
 // 로그인
 function* loginUser(action) {
 	try {
@@ -306,7 +367,19 @@ function* watchRegisterUser() {
 	// console.log('watchRegister');
 	yield takeLatest(REGISTER_USER_REQUEST, registerUser);
 }
-
+// 이메일 인증
+function* watchAuthUser() {
+	yield takeLatest(AUTH_USER_REQUEST, authUser);
+}
+// 이메일 재전송
+function* watchAuthAgain() {
+	yield takeLatest(AUTH_AGAIN_REQUEST, authAgain);
+}
+// pending 유저 가져오기
+function* watchFetchPendingUser() {
+	yield takeLatest(FETCH_PENDING_USER_REQUEST, fetchPendingUser);
+}
+// 인증 메일 다시 보내기
 // 로그인
 function* watchLoginUser() {
 	// console.log('watchLgoinUser');
@@ -364,6 +437,9 @@ function* watchFetchFollowings() {
 export default function* userSaga() {
 	yield all([
 		fork(watchRegisterUser),
+		fork(watchAuthUser),
+		fork(watchAuthAgain),
+		fork(watchFetchPendingUser),
 		fork(watchLoginUser),
 		fork(watchLogoutUser),
 		fork(watchLoadMyInfo),

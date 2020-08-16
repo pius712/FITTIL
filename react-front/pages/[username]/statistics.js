@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import StatisticsContent from '../../component/statistics/StatisticsContent';
-import Spinner from '../../component/layout/Spinner';
+import LoadingSpinner from '../../component/layout/LoadingSpinner';
 import Router, { useRouter } from 'next/router';
 import axios from 'axios';
 import { LOAD_MY_INFO_REQUEST, SELECT_MENU_REQUEST } from '../../actions';
@@ -24,7 +24,7 @@ const Statistics = () => {
 		}
 	});
 	if (!me) {
-		return <Spinner></Spinner>;
+		return <LoadingSpinner></LoadingSpinner>;
 	}
 	return <StatisticsContent targetname={username}></StatisticsContent>;
 };

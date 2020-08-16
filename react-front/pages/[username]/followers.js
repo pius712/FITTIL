@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import AppLayout from '../../component/layout/AppLayout';
 import AppMenu from '../../component/layout/AppMenu';
 import Profile from '../../component/profile/Profile';
-import Spinner from '../../component/layout/Spinner';
+import LoadingSpinner from '../../component/layout/LoadingSpinner';
 import FollowList from '../../component/follow/FollowList';
 import { useSelector, useDispatch } from 'react-redux';
 import Router, { useRouter } from 'next/router';
@@ -49,7 +49,7 @@ const Followers = () => {
 		}
 	});
 	if (!me || !followList || !targetUserInfo) {
-		return <Spinner></Spinner>;
+		return <LoadingSpinner></LoadingSpinner>;
 	}
 	return (
 		<AppLayout

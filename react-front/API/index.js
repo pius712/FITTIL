@@ -8,6 +8,18 @@ axios.defaults.withCredentials = true;
 const registerUserAPI = data => {
 	return axios.post('user/signup', data);
 };
+// pending user 가져오기
+const fetchPendingUserAPI = data => {
+	return axios.get(`user/pending/${data.nickname}`);
+};
+// 이메일 인증
+const authUserAPI = data => {
+	return axios.post('auth', data);
+};
+// 이메일 재전송
+const authAgainAPI = data => {
+	return axios.get(`auth/email/${data.nickname}`);
+};
 // 로그인
 const loginUserAPI = data => {
 	return axios.post('user/login', data);
@@ -105,6 +117,9 @@ const fetchFollowingsAPI = data => {
 };
 export {
 	registerUserAPI,
+	fetchPendingUserAPI,
+	authUserAPI,
+	authAgainAPI,
 	loginUserAPI,
 	logoutUserAPI,
 	loadMyInfoAPI,

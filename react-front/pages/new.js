@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import { Row, Col, Layout, Result, Button } from 'antd';
 import AppHeader from '../component/layout/AppHeader';
-import Spinner from '../component/layout/Spinner';
+import LoadingSpinner from '../component/layout/LoadingSpinner';
 import styled from 'styled-components';
 import wrapper from '../store/configureStore';
 import axios from 'axios';
@@ -33,7 +33,7 @@ const New = () => {
 	}, [me]);
 
 	if (!me) {
-		return <Spinner></Spinner>;
+		return <LoadingSpinner></LoadingSpinner>;
 	}
 	return (
 		<>

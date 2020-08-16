@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Row, Col } from 'antd';
+import { Button, Row, Col, Layout } from 'antd';
 import Router from 'next/router';
 import AppHeader from './SignupHeader';
 import SignupForm from './SignupForm';
@@ -66,7 +66,16 @@ const SigninLayout = () => {
 					</Row>
 				</MainWrapper>
 			</main>
-			<footer></footer>
+			<Layout.Footer
+				style={{
+					position: 'absolute',
+					bottom: '0px',
+					width: '100%',
+					textAlign: 'center',
+				}}
+			>
+				FITTIL @2020 Created By Pius
+			</Layout.Footer>
 		</>
 	);
 };

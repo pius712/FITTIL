@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import AppLayout from '../../component/layout/AppLayout';
 import AppMenu from '../../component/layout/AppMenu';
-import Spinner from '../../component/layout/Spinner';
+import LoadingSpinner from '../../component/layout/LoadingSpinner';
 import Profile from '../../component/profile/Profile';
 import FollowList from '../../component/follow/FollowList';
 import { useSelector, useDispatch } from 'react-redux';
@@ -49,7 +49,7 @@ const Followings = () => {
 		}
 	});
 	if (!me || !followList || !targetUserInfo) {
-		return <Spinner></Spinner>;
+		return <LoadingSpinner></LoadingSpinner>;
 	}
 	return (
 		<AppLayout

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import AppLayout from '../../component/layout/AppLayout';
 import AppMenu from '../../component/layout/AppMenu';
 import Profile from '../../component/profile/Profile';
-import Spinner from '../../component/layout/Spinner';
+import LoadingSpinner from '../../component/layout/LoadingSpinner';
 import RepoNavigation from '../../component/repo/RepoNavigation';
 import RepoContents from '../../component/repo/RepoContents';
 import axios from 'axios';
@@ -75,7 +75,7 @@ const Repository = () => {
 	// 	}
 	// }, []);
 	if (!(me && targetUserInfo)) {
-		return <Spinner></Spinner>;
+		return <LoadingSpinner></LoadingSpinner>;
 	}
 	return (
 		<AppLayout

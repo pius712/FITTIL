@@ -5,6 +5,18 @@ import {
 	LOGIN_USER_REQUEST,
 	LOGIN_USER_SUCCESS,
 	LOGIN_USER_FAILURE,
+	// 이메일 인증
+	AUTH_USER_REQUEST,
+	AUTH_USER_SUCCESS,
+	AUTH_USER_FAILURE,
+	// 이메일 재전송
+	AUTH_AGAIN_REQUEST,
+	AUTH_AGAIN_SUCCESS,
+	AUTH_AGAIN_FAILURE,
+	// 대기 중인 유저 정보 가져오기
+	FETCH_PENDING_USER_REQUEST,
+	FETCH_PENDING_USER_SUCCESS,
+	FETCH_PENDING_USER_FAILURE,
 	LOGOUT_USER_REQUEST,
 	LOGOUT_USER_SUCCESS,
 	LOGOUT_USER_FAILURE,
@@ -45,6 +57,7 @@ import {
 import produce from 'immer';
 const initialState = {
 	me: null,
+	pendingUser: null,
 	targetUserInfo: null,
 	searchUser: null,
 	followList: null,
@@ -90,6 +103,15 @@ const initialState = {
 	searchUserLengthLoading: false,
 	searchUserLengthDone: false,
 	searchUserLengthError: null,
+	authUserLoading: false,
+	authUserDone: false,
+	authUserError: null,
+	authAgainLoading: false,
+	authAgainDone: false,
+	authAgainError: null,
+	fetchPendingUserLoading: false,
+	fetchPendingUserDone: false,
+	fetchPendingUserError: null,
 };
 const dummyUser = data => ({
 	...data, // nickname, email, password
@@ -126,7 +148,7 @@ const reducer = (state = initialState, action) => {
 			case REGISTER_USER_SUCCESS:
 				draftState.registerLoading = false;
 				draftState.registerDone = true;
-				draftState.me = action.data;
+				draftState.pendingUser = action.data;
 				break;
 			case REGISTER_USER_FAILURE:
 				draftState.registerLoading = false;
@@ -146,6 +168,49 @@ const reducer = (state = initialState, action) => {
 			case LOGIN_USER_FAILURE:
 				draftState.loginLoading = false;
 				draftState.loginError = action.error;
+				break;
+			// 인증 코드 입력
+			case AUTH_USER_REQUEST:
+				draftState.authUserLoading = true;
+				draftState.authUserDone = false;
+				draftState.authUserError = null;
+				break;
+			case AUTH_USER_SUCCESS:
+				draftState.authUserLoading = false;
+				draftState.authUserDone = true;
+				break;
+			case AUTH_USER_FAILURE:
+				draftState.authUserLoading = false;
+				draftState.authUserError = action.error;
+				break;
+			// 인증 이메일 재전송
+			case AUTH_AGAIN_REQUEST:
+				draftState.authAgainLoading = true;
+				draftState.authAgainDone = false;
+				draftState.authAgainError = null;
+				break;
+			case AUTH_AGAIN_SUCCESS:
+				draftState.authAgainLoading = false;
+				draftState.authAgainDone = true;
+				break;
+			case AUTH_AGAIN_FAILURE:
+				draftState.authAgainLoading = false;
+				draftState.authAgainError = action.error;
+				break;
+			// pending user 가져오기
+			case FETCH_PENDING_USER_REQUEST:
+				draftState.fetchPendingUserLoading = true;
+				draftState.fetchPendingUserDone = false;
+				draftState.fetchPendingUserError = null;
+				break;
+			case FETCH_PENDING_USER_SUCCESS:
+				draftState.fetchPendingUserLoading = false;
+				draftState.fetchPendingUserDone = true;
+				draftState.pendingUser = action.data;
+				break;
+			case FETCH_PENDING_USER_FAILURE:
+				draftState.fetchPendingUserLoading = false;
+				draftState.fetchPendingUserError = action.error;
 				break;
 			// 로그아웃
 			case LOGOUT_USER_REQUEST:
