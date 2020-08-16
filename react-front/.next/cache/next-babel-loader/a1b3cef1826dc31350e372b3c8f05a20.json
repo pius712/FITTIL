@@ -1,1 +1,0 @@
-{"ast":null,"code":"export default (function () {\n  return null;\n});","map":{"version":3,"sources":["/Users/pius712/Documents/GitHub/fittil/react-front/component/NoteCard.js"],"names":[],"mappings":"AAAA,gBAAe;AAAA,SAAM,IAAN;AAAA,CAAf","sourcesContent":["export default () => null;\n"]},"metadata":{},"sourceType":"module"}
