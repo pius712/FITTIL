@@ -108,8 +108,8 @@ const SignupForm = () => {
 			}
 			if (
 				validatePassword(password) === false ||
-				password.length < 4 ||
-				password.length > 12
+				password.length < 8 ||
+				password.length > 20
 			) {
 				return Modal.warning({
 					title: '비밀번호를 확인해주세요',

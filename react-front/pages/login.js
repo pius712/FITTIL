@@ -95,7 +95,7 @@ const Login = () => {
 		if (loginError) {
 			alert(loginError);
 		}
-	});
+	}, [loginError]);
 	return (
 		<>
 			<AppHeader></AppHeader>
