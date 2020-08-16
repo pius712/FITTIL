@@ -6,7 +6,7 @@ const { USER_EXIST, NOT_FOUND_USER, LOGOUT_SUCCESS } = require('../actions');
 const router = express.Router();
 const { Op } = require('sequelize');
 const passport = require('passport');
-
+const { transport, mailOptions, generateKey } = require('../utils/mailer');
 // GET /user 내 정보가져오기
 router.get('/', isLoggedIn, async (req, res, next) => {
 	try {
@@ -14,6 +14,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
 		const user = await User.findOne({
 			where: {
 				id: req.user.id,
+				verified: true,
 			},
 			attributes: {
 				exclude: ['password'],
@@ -64,62 +65,111 @@ router.get('/', isLoggedIn, async (req, res, next) => {
 // Note /user/singup 회원가입
 router.post('/signup', isNotLoggedIn, async (req, res, next) => {
 	try {
-		const exUser = await User.findOne({ where: { email: req.body.email } });
-		if (exUser) {
+		const exUser = await User.findOne({
+			where: {
+				[Op.or]: [{ email: req.body.email }, { nickname: req.body.nickname }],
+			},
+		});
+		if (exUser && exUser.verified === true) {
 			return res.status(403).send(USER_EXIST);
 		}
-		const hashedPassword = await bcrypt.hash(req.body.password, 10);
-		await User.create({
-			nickname: req.body.nickname,
-			email: req.body.email,
-			password: hashedPassword,
-		});
-		req.body.id = req.body.nickname;
-		passport.authenticate('local', (err, user, info) => {
+
+		// 이메일 인증 코드
+
+		// 이메일 전송
+		const key = generateKey(req.body.email);
+		const options = mailOptions(req.body.email, key);
+		transport.sendMail(options, (err, info) => {
 			if (err) {
-				console.error(err);
-				next(err);
+				console.log(err);
 			}
-			if (info) {
-				return res.status(401).send(info.reason);
-			}
-			return req.login(user, async err => {
-				if (err) {
-					console.error(err);
-					next(err);
-				}
-				const userWithoutPassword = await User.findOne({
-					where: {
-						id: user.id,
-					},
-					attributes: {
-						exclude: ['password'],
-					},
-					include: [
-						{
-							model: User,
-							as: 'Followings',
-							attributes: ['id'],
-						},
-						{
-							model: User,
-							as: 'Followers',
-							attributes: ['id'],
-						},
-						{
-							model: Setting,
-						},
-					],
-				});
-				return res.json(userWithoutPassword);
+			console.log(info);
+			// console.log(info.messageId);
+		});
+
+		//
+		const hashedPassword = await bcrypt.hash(req.body.password, 10);
+		if (!exUser) {
+			await User.create({
+				nickname: req.body.nickname,
+				email: req.body.email,
+				password: hashedPassword,
+				key_for_verify: key,
 			});
-		})(req, res, next);
+		}
+
+		const pendingUser = await User.findOne({
+			where: {
+				email: req.body.email,
+			},
+			attributes: ['id', 'email', 'nickname'],
+		});
+		res.json(pendingUser);
+		// 로그인8
+		// req.body.id = req.body.nickname;
+		// passport.authenticate('local', (err, user, info) => {
+		// 	if (err) {
+		// 		console.error(err);
+		// 		next(err);
+		// 	}
+		// 	if (info) {
+		// 		return res.status(401).send(info.reason);
+		// 	}
+		// 	return req.login(user, async err => {
+		// 		if (err) {
+		// 			console.error(err);
+		// 			next(err);
+		// 		}
+		// 		const userWithoutPassword = await User.findOne({
+		// 			where: {
+		// 				id: user.id,
+		// 			},
+		// 			attributes: {
+		// 				exclude: ['password'],
+		// 			},
+		// 			include: [
+		// 				{
+		// 					model: User,
+		// 					as: 'Followings',
+		// 					attributes: ['id'],
+		// 				},
+		// 				{
+		// 					model: User,
+		// 					as: 'Followers',
+		// 					attributes: ['id'],
+		// 				},
+		// 				{
+		// 					model: Setting,
+		// 				},
+		// 			],
+		// 		});
+		// 		return res.json(userWithoutPassword);
+		// 	});
+		// })(req, res, next);
 	} catch (err) {
 		console.error(err);
 		next(err);
 	}
 });
-
+router.get('/pending/:nickname', async (req, res, next) => {
+	try {
+		const pendingUser = await User.findOne({
+			where: {
+				nickname: req.params.nickname,
+				verified: false,
+			},
+			attributes: ['id', 'nickname', 'email'],
+		});
+		if (!pendingUser) {
+			console.log('pendingUser 없음');
+			return res.status(403).send(NOT_FOUND_USER);
+		}
+		return res.json(pendingUser);
+	} catch (err) {
+		console.error(err);
+		next(err);
+	}
+});
 // Note /user/login 로그인
 router.post('/login', isNotLoggedIn, async (req, res, next) => {
 	try {
@@ -240,6 +290,7 @@ router.get('/search', isLoggedIn, async (req, res, next) => {
 				nickname: {
 					[Op.like]: `%${req.query.username}%`,
 				},
+				verified: true,
 			},
 			attributes: ['id', 'nickname', 'note'],
 			offset,
@@ -264,6 +315,7 @@ router.get('/length/serach/:username', async (req, res, next) => {
 				nickname: {
 					[Op.like]: `%${req.query.username}%`,
 				},
+				verified: true,
 			},
 		});
 		res.status(200).json({ count });
@@ -278,6 +330,7 @@ router.get('/:targetname', isLoggedIn, async (req, res, next) => {
 		const user = await User.findOne({
 			where: {
 				nickname: req.params.targetname,
+				verified: true,
 			},
 			attributes: {
 				exclude: ['password'],
@@ -315,6 +368,7 @@ router.patch('/:nickname/follow', isLoggedIn, async (req, res, next) => {
 		const exUser = await User.findOne({
 			where: {
 				nickname: req.params.nickname,
+				verified: true,
 			},
 		});
 		if (!exUser) {
@@ -337,6 +391,7 @@ router.patch('/:nickname/unfollow', isLoggedIn, async (req, res, next) => {
 		const exUser = await User.findOne({
 			where: {
 				nickname: req.params.nickname,
+				verified: true,
 			},
 		});
 		if (!exUser) {
@@ -352,7 +407,6 @@ router.patch('/:nickname/unfollow', isLoggedIn, async (req, res, next) => {
 // 팔로워 리스트
 router.get('/followers/list', async (req, res, next) => {
 	try {
-		console.log('req.query', req.query);
 		const user = await User.findOne({
 			where: {
 				nickname: req.query.username,

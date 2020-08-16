@@ -10,6 +10,7 @@ const db = require('./models');
 const passportConfig = require('./passport');
 const userRouter = require('./router/user');
 const noteRouter = require('./router/note');
+const authRouter = require('./router/auth');
 const hpp = require('hpp');
 const helmet = require('helmet');
 // 설정
@@ -37,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 app.use(
 	cors({
-		origin: ['http://localhost:80', 'http://fittil.com'],
+		origin: ['http://localhost:3000', 'http://fittil.com'],
 		credentials: true,
 	}),
 );
@@ -63,7 +64,12 @@ app.use(passport.session());
 // 라우터 등록
 app.use('/user', userRouter);
 app.use('/note', noteRouter);
+app.use('/auth', authRouter);
 
 app.listen(80, () => {
 	console.log('express sever started');
 });
+
+// app.listen(8080, () => {
+// 	console.log('express server started');
+// });

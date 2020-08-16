@@ -31,6 +31,14 @@ module.exports = (sequelize, DataTypes) => {
 			instagram: {
 				type: DataTypes.STRING(100),
 			},
+			verified: {
+				type: DataTypes.BOOLEAN,
+				defaultValue: false,
+			},
+			key_for_verify: {
+				type: DataTypes.STRING(100),
+				allowNull: false,
+			},
 		},
 		{
 			charset: 'utf8',

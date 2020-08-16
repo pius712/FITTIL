@@ -16,6 +16,7 @@ module.exports = () => {
 					const exUser = await User.findOne({
 						where: {
 							[Op.or]: [{ email: id }, { nickname: id }],
+							verified: true,
 						},
 					});
 					if (!exUser) {

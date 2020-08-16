@@ -14,6 +14,7 @@ const db = {};
 
 db.User = require('./user')(sequelize, DataTypes);
 db.Note = require('./note')(sequelize, DataTypes);
+db.Auth = require('./auth')(sequelize, DataTypes);
 // db.Image = require('./image')(sequelize, DataTypes);
 // db.Comment = require('./comment')(sequelize, DataTypes);
 // db.Hashtag = require('./hashtag')(sequelize, DataTypes);
