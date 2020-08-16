@@ -46,7 +46,7 @@ const SearchPeople = () => {
 	// 	if (!me) {
 	// 		Router.push('/');
 	// 	}
-	// }, [me]);
+	// }, [me]);c
 	useEffect(() => {
 		if (loadMyInfoError) {
 			alert('로그인이 필요합니다.');
