@@ -42,11 +42,11 @@ const SearchPeople = () => {
 		},
 		[name, dispatch],
 	);
-	useEffect(() => {
-		if (!me) {
-			Router.push('/');
-		}
-	}, [me]);
+	// useEffect(() => {
+	// 	if (!me) {
+	// 		Router.push('/');
+	// 	}
+	// }, [me]);
 	useEffect(() => {
 		if (loadMyInfoError) {
 			alert('로그인이 필요합니다.');

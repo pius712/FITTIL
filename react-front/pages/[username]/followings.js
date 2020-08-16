@@ -17,9 +17,13 @@ import {
 } from '../../actions';
 import { END } from 'redux-saga';
 const Followings = () => {
-	const { me, targetUserInfo, followList, loadMyInfoError } = useSelector(
-		state => state.user,
-	);
+	const {
+		me,
+		targetUserInfo,
+		followList,
+		loadMyInfoError,
+		logoutDone,
+	} = useSelector(state => state.user);
 
 	const router = useRouter();
 	const { username } = router.query;
@@ -39,10 +43,10 @@ const Followings = () => {
 		[username],
 	);
 	useEffect(() => {
-		if (!me) {
+		if (logoutDone) {
 			Router.push('/');
 		}
-	}, [me]);
+	}, [logoutDone]);
 	useEffect(() => {
 		if (loadMyInfoError) {
 			alert('로그인이 필요합니다.');

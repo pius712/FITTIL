@@ -26,7 +26,9 @@ const Repository = () => {
 	const { me, targetUserInfo, loadMyInfoError } = useSelector(
 		state => state.user,
 	);
-	const { mainNotes, noteLength } = useSelector(state => state.note);
+	const { mainNotes, noteLength, logoutDone } = useSelector(
+		state => state.note,
+	);
 	const router = useRouter();
 	const { username } = router.query;
 
@@ -47,18 +49,18 @@ const Repository = () => {
 		},
 		[username, mainNotes],
 	);
-	useEffect(() => {
-		// console.log('repo me', me);
-		if (!(me && me.id)) {
-			alert('로그인이 필요합니다.');
-			Router.replace('/');
-		}
-	}, [me]);
+
 	useEffect(() => {
 		if (loadMyInfoError) {
-			alert('로그인이 필요합니다.');
+			alert(loadMyInfoError);
+			Router.replace('/');
 		}
 	});
+	useEffect(() => {
+		if (logoutDone) {
+			Router.push('/');
+		}
+	}, [logoutDone]);
 	// useEffect(() => {
 	// 	if (username && me) {
 

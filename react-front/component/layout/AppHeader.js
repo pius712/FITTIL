@@ -97,6 +97,9 @@ const AppHeader = ({ targetname }) => {
 		setDrawerVisible(false);
 	});
 	const handleSearch = useCallback(value => {
+		if (value === '' || value === null) {
+			return;
+		}
 		Router.push(`/search/people/${value}`);
 	});
 	const onLogout = useCallback(() => {});

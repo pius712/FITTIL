@@ -28,7 +28,11 @@ const SearchUserList = () => {
 							<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
 						}
 						title={
-							<Link href="/[username]" as={`/${user.nickname}`}>
+							<Link
+								prefetch={false}
+								href="/[username]"
+								as={`/${user.nickname}`}
+							>
 								<a>{user.nickname}</a>
 							</Link>
 						}

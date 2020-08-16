@@ -1,17 +1,19 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Menu } from 'antd';
 import Link from 'next/link';
 import Router from 'next/router';
 import { LOGOUT_USER_REQUEST } from '../../actions';
 const AvatarMenu = ({ targetname }) => {
 	const dispatch = useDispatch();
+	// const { logoutDone } = useSelector(state => state.user);
 	const handleLogout = useCallback(() => {
 		// Router.push('/');
 		dispatch({
 			type: LOGOUT_USER_REQUEST,
 		});
 	});
+
 	return (
 		<Menu style={{ borderRadius: '5px' }}>
 			<Menu.Item>

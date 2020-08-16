@@ -16,21 +16,30 @@ import {
 import { END } from 'redux-saga';
 import MainContents from '../../component/MainContents';
 const Main = () => {
-	const { me, targetUserInfo, loadMyInfoError } = useSelector(
-		state => state.user,
-	);
+	const {
+		me,
+		targetUserInfo,
+		loadMyInfoError,
+		fetchUserInfoError,
+		logoutDone,
+	} = useSelector(state => state.user);
 
 	const router = useRouter();
 	const { username } = router.query;
 	const dispatch = useDispatch();
 	useEffect(() => {
-		if (!me || !targetUserInfo) {
+		if (fetchUserInfoError) {
+			Router.push(`/${me.nickname}`);
+		}
+	}, [fetchUserInfoError]);
+	useEffect(() => {
+		if (logoutDone) {
 			Router.push('/');
 		}
-	}, [me]);
+	}, [logoutDone]);
 	useEffect(() => {
 		if (loadMyInfoError) {
-			alert('로그인이 필요합니다.');
+			alert(loadMyInfoError);
 			Router.replace('/');
 		}
 	});

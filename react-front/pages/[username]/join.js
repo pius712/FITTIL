@@ -101,7 +101,6 @@ const Join = () => {
 	);
 	useEffect(() => {
 		if (me && me.id) {
-			console.log('me && me.id');
 			Router.replace('/login');
 		}
 	}, [me]);
@@ -112,7 +111,6 @@ const Join = () => {
 	}, [pendingUser]);
 	useEffect(() => {
 		if (authUserDone) {
-			console.log('authUserDone');
 			message.success('인증이 완료되었습니다.');
 			Router.push('/login');
 		}

@@ -1,12 +1,6 @@
-import React, { useCallback } from 'react';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { Button, Row, Col, Layout } from 'antd';
-import Router from 'next/router';
-import Link from 'next/link';
 import AppHeader from './AppHeader';
-import AppMenu from './AppMenu';
-import Profile from '../profile/Profile';
 const AppLayout = ({ left, menu, content, right, targetname }) => {
 	return (
 		<>
@@ -21,7 +15,6 @@ const AppLayout = ({ left, menu, content, right, targetname }) => {
 						xl={{ span: 5, offset: 2 }}
 					>
 						{left}
-						{/* <Profile targetname={targetname}></Profile> */}
 					</Col>
 					{/* 중간 */}
 					<Col
@@ -31,7 +24,6 @@ const AppLayout = ({ left, menu, content, right, targetname }) => {
 						xl={{ span: 13, offset: 0 }}
 					>
 						{menu}
-						{/* <AppMenu targetname={targetname}></AppMenu> */}
 						{content}
 					</Col>
 					{/* 우측 */}
